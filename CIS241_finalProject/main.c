@@ -2,20 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAXENTRIES 2000
+#define MAXENTRIES 2500
 
 struct entry{
     unsigned int year;
     unsigned int month;
     unsigned int day;
-    double SP500;
-    double dividend;
-    double earnings;
-    double consumerPriceIndex;
-    double longInterestRate;
-    double realPrice;
-    double realDividend;
-    double realEarnings;
+    double       pcRatio;
+    unsigned int pVol;
+    unsigned int cVol;
+    unsigned int totVol;
 };
 struct entry dataBase[MAXENTRIES];
 int currentEntries = 0;
@@ -23,64 +19,48 @@ int currentEntries = 0;
 void printEntry(int i){
     printf("\n");
     printf("Date:                   %d-%d-%d\n", dataBase[i].year, dataBase[i].month, dataBase[i].day);
-    printf("S&P500:                 %lf\n", dataBase[i].SP500);
-    printf("Dividend:               %lf\n", dataBase[i].dividend);
-    printf("Earnings:               %lf\n", dataBase[i].earnings);
-    printf("Consumer Price Index:   %lf\n", dataBase[i].consumerPriceIndex);
-    printf("Long Interest Rate:     %lf\n", dataBase[i].longInterestRate);
-    printf("Real Price:             %lf\n", dataBase[i].realPrice);
-    printf("Real Dividend:          %lf\n", dataBase[i].realDividend);
-    printf("Real Earnings:          %lf\n\n", dataBase[i].realEarnings);
+    printf("Put/Call Ratio:         %lf\n", dataBase[i].pcRatio);
+    printf("Put Volume:             %d\n", dataBase[i].pVol);
+    printf("Call Volume:            %d\n", dataBase[i].cVol);
+    printf("Total Volume:           %d\n\n", dataBase[i].totVol);
 }
 
 void fscanDataBase(void){
-    unsigned int tyear;
-    unsigned int tmonth;
-    unsigned int tday;
-    double tSP500;
-    double tdividend;
-    double tearnings;
-    double tconsumerPriceIndex;
-    double tlongInterestRate;
-    double trealPrice;
-    double trealDividend;
-    double trealEarnings;
+    unsigned int t_year;
+    unsigned int t_month;
+    unsigned int t_day;
+    double t_pcRatio;
+    unsigned int t_pVol;
+    unsigned int t_cVol;
+    unsigned int t_totVol;
     char headerStr[120];
 
     FILE *dbPtr;
-    if ((dbPtr = fopen("hardware.dat", "r")) == NULL){
+    if ((dbPtr = fopen("SPY241Project.txt", "r")) == NULL){
         puts("File could not be opened");
     }
     else{
         currentEntries = 0;
         fgets(headerStr, 112, dbPtr);           //absorb first line
         while(!feof(dbPtr)){
-            fscanf(dbPtr, "%d-%d-%d,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,\n",
-                                            &tyear,
-                                            &tmonth,
-                                            &tday,
-                                            &tSP500,
-                                            &tdividend,
-                                            &tearnings,
-                                            &tconsumerPriceIndex,
-                                            &tlongInterestRate,
-                                            &trealPrice,
-                                            &trealDividend,
-                                            &trealEarnings);
+            fscanf(dbPtr, "%d/%d/%d,%lf,%d,%d,%d\n",
+                                            &t_year,
+                                            &t_month,
+                                            &t_day,
+                                            &t_pcRatio,
+                                            &t_pVol,
+                                            &t_cVol,
+                                            &t_totVol);
 
-            dataBase[currentEntries].year               = tyear              ;
-            dataBase[currentEntries].month              = tmonth             ;
-            dataBase[currentEntries].day                = tday               ;
-            dataBase[currentEntries].SP500              = tSP500             ;
-            dataBase[currentEntries].dividend           = tdividend          ;
-            dataBase[currentEntries].earnings           = tearnings          ;
-            dataBase[currentEntries].consumerPriceIndex = tconsumerPriceIndex;
-            dataBase[currentEntries].longInterestRate   = tlongInterestRate  ;
-            dataBase[currentEntries].realPrice          = trealPrice         ;
-            dataBase[currentEntries].realDividend       = trealDividend      ;
-            dataBase[currentEntries].realEarnings       = trealEarnings      ;
+            dataBase[currentEntries].year = t_year;
+            dataBase[currentEntries].month = t_month;
+            dataBase[currentEntries].day = t_day;
+            dataBase[currentEntries].pcRatio = t_pcRatio;
+            dataBase[currentEntries].pVol = t_pVol;
+            dataBase[currentEntries].cVol = t_cVol;
+            dataBase[currentEntries].totVol = t_totVol;
 
-            printEntry(currentEntries);
+            //printEntry(currentEntries);
             currentEntries++;
         }
         printf("\nDatabase scanned in!\nNumber of Entries: %d\n", currentEntries);
@@ -90,6 +70,7 @@ void fscanDataBase(void){
 
 int main()
 {
-    printf("Hello world!\n");
+    fscanDataBase();
+    printEntry(187);
     return 0;
 }
