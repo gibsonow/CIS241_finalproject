@@ -18,7 +18,7 @@ int currentEntries = 0;
 
 void printEntry(int i){
     printf("\n");
-    printf("Date:                   %d-%d-%d\n", dataBase[i].year, dataBase[i].month, dataBase[i].day);
+    printf("Date (m-d-y):           %d-%d-%d\n", dataBase[i].year, dataBase[i].month, dataBase[i].day);
     printf("Put/Call Ratio:         %lf\n", dataBase[i].pcRatio);
     printf("Put Volume:             %d\n", dataBase[i].pVol);
     printf("Call Volume:            %d\n", dataBase[i].cVol);
@@ -44,9 +44,9 @@ void fscanDataBase(void){
         fgets(headerStr, 112, dbPtr);           //absorb first line
         while(!feof(dbPtr)){
             fscanf(dbPtr, "%d/%d/%d,%lf,%d,%d,%d\n",
-                                            &t_year,
                                             &t_month,
                                             &t_day,
+                                            &t_year,
                                             &t_pcRatio,
                                             &t_pVol,
                                             &t_cVol,
@@ -68,9 +68,76 @@ void fscanDataBase(void){
     }
 }
 
+int maxCall(int year1, int month1, int day1, int year2, int month2, int day2){         //assumes cleaned data, date1 comes before date2
+    int i, date1 = 0, date2 = 0, maxCall = 0, maxCallIndex = 0;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    for(i = date1; i <= date2; i++){
+        if(dataBase[i].cVol > maxCall){
+            maxCall = dataBase[i].cVol;
+            maxCallIndex = i;
+        }
+    }
+    return maxCallIndex;
+}
+
+int minCall(int year1, int month1, int day1, int year2, int month2, int day2){         //assumes cleaned data, date1 comes before date2
+    int i, date1 = 0, date2 = 0, minCall = 1000000, minCallIndex = 0;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    for(i = date1; i <= date2; i++){
+        if(dataBase[i].cVol < minCall){
+            minCall = dataBase[i].cVol;
+            minCallIndex = i;
+        }
+    }
+    return minCallIndex;
+}
+
+int maxPut(int year1, int month1, int day1, int year2, int month2, int day2){         //assumes cleaned data, date1 comes before date2
+    int i, date1 = 0, date2 = 0, maxPut = 0, maxPutIndex = 0;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    for(i = date1; i <= date2; i++){
+        if(dataBase[i].pVol > maxPut){
+            maxPut = dataBase[i].pVol;
+            maxPutIndex = i;
+        }
+    }
+    return maxPutIndex;
+}
+
+int minPut(int year1, int month1, int day1, int year2, int month2, int day2){         //assumes cleaned data, date1 comes before date2
+    int i, date1 = 0, date2 = 0, minPut = 1000000, minPutIndex = 0;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    for(i = date1; i <= date2; i++){
+        if(dataBase[i].cVol < minPut){
+            minPut = dataBase[i].pVol;
+            minPutIndex = i;
+        }
+    }
+    return minPutIndex;
+}
+
+int dateIndex(int year, int month, int day){
+    int i, date = -1;
+    for(i = 0; i < currentEntries; i++){
+        if(year == dataBase[i].year && month == dataBase[i].month && day == dataBase[i].day){
+            date = i;
+        }
+    }
+    return date;
+}
+
 int main()
 {
     fscanDataBase();
-    printEntry(187);
+    printEntry(minPut(10,7,15,10,7,19));
+
     return 0;
 }
