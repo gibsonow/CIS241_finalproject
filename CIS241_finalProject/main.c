@@ -150,10 +150,49 @@ int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, in
     else return 0;                                  //0 if bear
 }
 
+int timeFrameBullBearIndex(int date1, int date2) {
+    int i;
+    double pcRatioSum = 0, pcRatioAvg;
+
+    for (i = date1; i <= date2; i++) {
+        pcRatioSum += dataBase[i].pcRatio;
+    }
+
+    pcRatioAvg = (pcRatioSum / ((date2 - date1) + 1));
+    printf("%d/%d: Avg. Put/Call Ratio: %.2lf, B/B: ", dataBase[date1].month, dataBase[date1].year, pcRatioAvg);
+
+    if (pcRatioAvg >= 1) return 1;                   //1 if bull
+    else return 0;                                   //0 if bear
+}
+
+void monthTabular(int month) {
+    int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;;
+    int nextFlag = 1;
+    while (index != currentEntries) {
+        if (nextFlag) {
+            nextFlag = 0;
+            while (dataBase[index].month != month)
+                index++;
+            startMonthIndex = index ;
+        }
+
+        while (dataBase[index].month == month)
+            index++;
+        endMonthIndex = index - 1;
+
+        result = timeFrameBullBearIndex(startMonthIndex, endMonthIndex);
+
+        printf("%d\n", result);
+
+        nextFlag = 1;
+    }
+}
+
 int main()
 {
     fscanDataBase();
     printf("%d\n", timeFrameBullBear(10, 7, 15, 10, 7, 19));
+    monthTabular(7);        // Gives the stats for a specific month out of every year available
 
     return 0;
 }
