@@ -134,10 +134,26 @@ int dateIndex(int year, int month, int day){
     return date;
 }
 
+int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, int day2){
+    int i, date1, date2;
+    double pcRatioSum = 0, pcRatioAvg;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    for(i = date1; i <= date2; i++){
+        pcRatioSum += dataBase[i].pcRatio;
+    }
+
+    pcRatioAvg = (pcRatioSum / (date2 - date1));
+    printf("Average ratio across timeframe: %.2lf\n", pcRatioAvg);
+    if(pcRatioAvg >= 1) return 1;                   //1 if bull
+    else return 0;                                  //0 if bear
+}
+
 int main()
 {
     fscanDataBase();
-    printEntry(minPut(10,7,15,10,7,19));
+    printf("%d\n", timeFrameBullBear(10,7,15,10,7,19));
 
     return 0;
 }
