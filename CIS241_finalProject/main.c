@@ -4,7 +4,8 @@
 
 #define MAXENTRIES 2500
 
-struct entry {
+struct entry
+{
     unsigned int year;
     unsigned int month;
     unsigned int day;
@@ -16,7 +17,8 @@ struct entry {
 struct entry dataBase[MAXENTRIES];
 int currentEntries = 0;
 
-void printEntry(int i) {
+void printEntry(int i)
+{
     printf("\n");
     printf("Date (m-d-y):           %d-%d-%d\n", dataBase[i].year, dataBase[i].month, dataBase[i].day);
     printf("Put/Call Ratio:         %lf\n", dataBase[i].pcRatio);
@@ -25,7 +27,8 @@ void printEntry(int i) {
     printf("Total Volume:           %d\n\n", dataBase[i].totVol);
 }
 
-void fscanDataBase(void) {
+void fscanDataBase(void)
+{
     unsigned int t_year;
     unsigned int t_month;
     unsigned int t_day;
@@ -36,21 +39,24 @@ void fscanDataBase(void) {
     char headerStr[120];
 
     FILE* dbPtr;
-    if ((dbPtr = fopen("SPY241Project.txt", "r")) == NULL) {
+    if ((dbPtr = fopen("SPY241Project.txt", "r")) == NULL)
+    {
         puts("File could not be opened");
     }
-    else {
+    else
+    {
         currentEntries = 0;
         fgets(headerStr, 112, dbPtr);           //absorb first line
-        while (!feof(dbPtr)) {
+        while (!feof(dbPtr))
+        {
             fscanf(dbPtr, "%d/%d/%d,%lf,%d,%d,%d\n",
-                &t_month,
-                &t_day,
-                &t_year,
-                &t_pcRatio,
-                &t_pVol,
-                &t_cVol,
-                &t_totVol);
+                   &t_month,
+                   &t_day,
+                   &t_year,
+                   &t_pcRatio,
+                   &t_pVol,
+                   &t_cVol,
+                   &t_totVol);
 
             dataBase[currentEntries].year = t_year;
             dataBase[currentEntries].month = t_month;
@@ -68,13 +74,16 @@ void fscanDataBase(void) {
     }
 }
 
-int maxCall(int year1, int month1, int day1, int year2, int month2, int day2) {         //assumes cleaned data, date1 comes before date2
+int maxCall(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
+{
     int i, date1 = 0, date2 = 0, maxCall = 0, maxCallIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
-    for (i = date1; i <= date2; i++) {
-        if (dataBase[i].cVol > maxCall) {
+    for (i = date1; i <= date2; i++)
+    {
+        if (dataBase[i].cVol > maxCall)
+        {
             maxCall = dataBase[i].cVol;
             maxCallIndex = i;
         }
@@ -82,13 +91,16 @@ int maxCall(int year1, int month1, int day1, int year2, int month2, int day2) { 
     return maxCallIndex;
 }
 
-int minCall(int year1, int month1, int day1, int year2, int month2, int day2) {         //assumes cleaned data, date1 comes before date2
+int minCall(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
+{
     int i, date1 = 0, date2 = 0, minCall = 1000000, minCallIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
-    for (i = date1; i <= date2; i++) {
-        if (dataBase[i].cVol < minCall) {
+    for (i = date1; i <= date2; i++)
+    {
+        if (dataBase[i].cVol < minCall)
+        {
             minCall = dataBase[i].cVol;
             minCallIndex = i;
         }
@@ -96,13 +108,16 @@ int minCall(int year1, int month1, int day1, int year2, int month2, int day2) { 
     return minCallIndex;
 }
 
-int maxPut(int year1, int month1, int day1, int year2, int month2, int day2) {         //assumes cleaned data, date1 comes before date2
+int maxPut(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
+{
     int i, date1 = 0, date2 = 0, maxPut = 0, maxPutIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
-    for (i = date1; i <= date2; i++) {
-        if (dataBase[i].pVol > maxPut) {
+    for (i = date1; i <= date2; i++)
+    {
+        if (dataBase[i].pVol > maxPut)
+        {
             maxPut = dataBase[i].pVol;
             maxPutIndex = i;
         }
@@ -110,13 +125,16 @@ int maxPut(int year1, int month1, int day1, int year2, int month2, int day2) {  
     return maxPutIndex;
 }
 
-int minPut(int year1, int month1, int day1, int year2, int month2, int day2) {         //assumes cleaned data, date1 comes before date2
+int minPut(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
+{
     int i, date1 = 0, date2 = 0, minPut = 1000000, minPutIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
-    for (i = date1; i <= date2; i++) {
-        if (dataBase[i].cVol < minPut) {
+    for (i = date1; i <= date2; i++)
+    {
+        if (dataBase[i].cVol < minPut)
+        {
             minPut = dataBase[i].pVol;
             minPutIndex = i;
         }
@@ -124,23 +142,31 @@ int minPut(int year1, int month1, int day1, int year2, int month2, int day2) {  
     return minPutIndex;
 }
 
-int dateIndex(int year, int month, int day) {
+/*
+* Helper function that returns database index (int) based on given day, month, and year
+*/
+int dateIndex(int year, int month, int day)
+{
     int i, date = -1;
-    for (i = 0; i < currentEntries; i++) {
-        if (year == dataBase[i].year && month == dataBase[i].month && day == dataBase[i].day) {
+    for (i = 0; i < currentEntries; i++)
+    {
+        if (year == dataBase[i].year && month == dataBase[i].month && day == dataBase[i].day)
+        {
             date = i;
         }
     }
     return date;
 }
 
-int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, int day2) {
+int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, int day2)
+{
     int i, date1, date2;
     double pcRatioSum = 0, pcRatioAvg;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
-    for (i = date1; i <= date2; i++) {
+    for (i = date1; i <= date2; i++)
+    {
         pcRatioSum += dataBase[i].pcRatio;
     }
 
@@ -150,11 +176,13 @@ int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, in
     else return 0;                                  //0 if bear
 }
 
-int timeFrameBullBearIndex(int date1, int date2) {
+int timeFrameBullBearIndex(int date1, int date2)
+{
     int i;
     double pcRatioSum = 0, pcRatioAvg;
 
-    for (i = date1; i <= date2; i++) {
+    for (i = date1; i <= date2; i++)
+    {
         pcRatioSum += dataBase[i].pcRatio;
     }
 
@@ -165,11 +193,14 @@ int timeFrameBullBearIndex(int date1, int date2) {
     else return 0;                                   //0 if bear
 }
 
-void monthTabular(int month) {
-    int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;;
+void monthTabular(int month)
+{
+    int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;
     int nextFlag = 1;
-    while (index != currentEntries) {
-        if (nextFlag) {
+    while (index != currentEntries)
+    {
+        if (nextFlag)
+        {
             nextFlag = 0;
             while (dataBase[index].month != month)
                 index++;
@@ -190,7 +221,131 @@ void monthTabular(int month) {
 
 int main()
 {
+    int userChoice = 0;
+    int userYear1 = -1;
+    int userDay1 = -1;
+    int userMonth1 = -1;
+    int userYear2 = -1;
+    int userDay2 = -1;
+    int userMonth2 = -1;
+
+
     fscanDataBase();
+
+    while(userChoice != -1)
+    {
+
+        //Menu options
+        puts("1. Highest Call Volume");
+        puts("2. Lowest Call Volume");
+        puts("3. Highest Put Volume");
+        puts("4. Lowest Put Volume");
+        puts("5. Put/Call Ratio");
+        puts("6. Put/Call Ratio (Month)\n");
+
+        printf("Please enter option number (-1 to quit): ");
+        scanf("%d", &userChoice);
+
+        //Selecting menu option based on user choice
+        switch (userChoice)
+        {
+        case 1:
+            printf("Enter first year: ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year: ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            printf("Highest call volume during this time range was: %d", maxCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            break;
+        case 2:
+            printf("Enter first year: ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year: ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            printf("Lowest call volume during this time range was: %d", minCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            break;
+        case 3:
+            printf("Enter first year: ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year: ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            printf("Highest put volume during this time range was: %d", maxPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            break;
+        case 4:
+            printf("Enter first year: ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year: ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            printf("Lowest put volume during this time range was: %d", minPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            break;
+        case 5:
+            printf("Enter first year: ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year: ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            timeFrameBullBear(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2) ? puts("This suggests a Bullish sentiment") :
+            puts("This suggests a Bearish sentiment");
+            break;
+        case 6:
+            printf("Enter a month (numerically): ");
+            scanf("%d", &userMonth1);
+            monthTabular(userMonth1);
+            break;
+        }
+
+
+    }
+
+    puts("\nOLD STUFF");
     printf("%d\n", timeFrameBullBear(10, 7, 15, 10, 7, 19));
     monthTabular(7);        // Gives the stats for a specific month out of every year available
 
