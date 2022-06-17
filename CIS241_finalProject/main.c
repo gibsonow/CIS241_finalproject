@@ -187,7 +187,8 @@ int timeFrameBullBearIndex(int date1, int date2)
     }
 
     pcRatioAvg = (pcRatioSum / ((date2 - date1) + 1));
-    printf("%d/%d: Avg. Put/Call Ratio: %.2lf, B/B: ", dataBase[date1].month, dataBase[date1].year, pcRatioAvg);
+    printf("%d/%d/%d - %d/%d/%d: Avg. Put/Call Ratio: %.2lf, B/B: ", dataBase[date1].month, dataBase[date1].day, dataBase[date1].year,
+                                                                    dataBase[date2].month, dataBase[date2].day, dataBase[date2].year, pcRatioAvg);
 
     if (pcRatioAvg >= 1) return 1;                   //1 if bull
     else return 0;                                   //0 if bear
@@ -216,6 +217,58 @@ void monthTabular(int month)
         printf("%d\n", result);
 
         nextFlag = 1;
+        if((endMonthIndex + 250) > currentEntries) break;
+    }
+}
+
+void quarterTabular(int quarter){
+    int monthMin, monthMid, monthMax;
+    switch(quarter){
+        case(1):
+            monthMin = 1;
+            monthMid = 2;
+            monthMax = 3;
+            break;
+        case(2):
+            monthMin = 4;
+            monthMid = 5;
+            monthMax = 6;
+            break;
+        case(3):
+            monthMin = 7;
+            monthMid = 8;
+            monthMax = 9;
+            break;
+        case(4):
+            monthMin = 10;
+            monthMid = 11;
+            monthMax = 12;
+            break;
+        default:
+            printf("Please enter a valid quarter.\n");
+            return;
+    }
+
+    int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;
+    int nextFlag = 1;
+    while (index != currentEntries) {
+        if (nextFlag) {
+            nextFlag = 0;
+            while (dataBase[index].month != monthMin)
+                index++;
+            startMonthIndex = index ;
+        }
+
+        while (dataBase[index].month == monthMax || dataBase[index].month == monthMid || dataBase[index].month == monthMin)
+            index++;
+        endMonthIndex = index - 1;
+
+        result = timeFrameBullBearIndex(startMonthIndex, endMonthIndex);
+
+        printf("%d\n", result);
+
+        nextFlag = 1;
+        if((endMonthIndex + 250) > currentEntries) break;
     }
 }
 
@@ -236,7 +289,7 @@ int main()
     {
 
         //Menu options
-        puts("1. Highest Call Volume");
+        puts("\n1. Highest Call Volume");
         puts("2. Lowest Call Volume");
         puts("3. Highest Put Volume");
         puts("4. Lowest Put Volume");
