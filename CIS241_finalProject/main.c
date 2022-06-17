@@ -317,7 +317,8 @@ int main()
             printf("Enter second day of month: ");
             scanf("%d", &userDay2);
 
-            printf("Highest call volume during this time range was: %d", maxCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            printf("Highest call volume during this time range was: %d\n",
+                   dataBase[maxCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].cVol);
             break;
         case 2:
             printf("Enter first year: ");
@@ -334,7 +335,8 @@ int main()
             printf("Enter second day of month: ");
             scanf("%d", &userDay2);
 
-            printf("Lowest call volume during this time range was: %d", minCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            printf("Lowest call volume during this time range was: %d\n",
+                   dataBase[minCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].cVol);
             break;
         case 3:
             printf("Enter first year: ");
@@ -351,7 +353,8 @@ int main()
             printf("Enter second day of month: ");
             scanf("%d", &userDay2);
 
-            printf("Highest put volume during this time range was: %d", maxPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            printf("Highest put volume during this time range was: %d\n",
+                   dataBase[maxPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].pVol);
             break;
         case 4:
             printf("Enter first year: ");
@@ -368,7 +371,8 @@ int main()
             printf("Enter second day of month: ");
             scanf("%d", &userDay2);
 
-            printf("Lowest put volume during this time range was: %d", minPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2));
+            printf("Lowest put volume during this time range was: %d\n",
+                   dataBase[minPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].pVol);
             break;
         case 5:
             printf("Enter first year: ");
