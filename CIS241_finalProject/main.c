@@ -48,7 +48,7 @@ void printEntry(int i)
 }
 
 //assigns each member of each object in dataBase[]
-//using format specifiers in fscanf if file 
+//using format specifiers in fscanf if file
 //can be opened succesfully
 void fscanDataBase(void)
 {
@@ -93,6 +93,8 @@ void fscanDataBase(void)
             currentEntries++;
         }
         printf("\nDatabase scanned in!\nNumber of Entries: %d\n", currentEntries);
+        printf("Earliest Entry: %d/%d/%d\n", dataBase[0].month, dataBase[0].day, dataBase[0].year);
+        printf("Latest Entry: %d/%d/%d\n", dataBase[currentEntries - 1].month, dataBase[currentEntries - 1].day, dataBase[currentEntries - 1].year);
         fclose(dbPtr);
     }
 }
@@ -280,6 +282,12 @@ void monthTabular(int month)
 {
     int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;
     int nextFlag = 1;
+
+    if(month > 12 || month < 1){
+        printf("Please enter a valid quarter.\n");
+        return;
+    }
+
     while (index != currentEntries)
     {
         if (nextFlag)
@@ -296,7 +304,7 @@ void monthTabular(int month)
 
         result = timeFrameBullBearIndex(startMonthIndex, endMonthIndex);
 
-        printf("%d\n", result);
+        printf("%s\n", result ? "Bull" : "Bear");
 
         nextFlag = 1;
         if((endMonthIndex + 250) > currentEntries) break;
@@ -309,7 +317,7 @@ void monthTabular(int month)
 //quarter: integer representing particular quarter of year
 void quarterTabular(int quarter){
     //represent first, second, and third months of given quarter
-    int monthMin, monthMid, monthMax; 
+    int monthMin, monthMid, monthMax;
     switch(quarter){ //assigns each variable to particular month index based on quarter
         case(1):
             monthMin = 1;
@@ -352,7 +360,7 @@ void quarterTabular(int quarter){
 
         result = timeFrameBullBearIndex(startMonthIndex, endMonthIndex);
 
-        printf("%d\n", result);
+        printf("%s\n", result ? "Bull" : "Bear");
 
         nextFlag = 1;
         if((endMonthIndex + 250) > currentEntries) break;
@@ -369,7 +377,7 @@ int main()
     int userYear2 = -1;
     int userDay2 = -1;
     int userMonth2 = -1;
-
+    int userQuarter = -1;
 
     fscanDataBase();
 
@@ -382,7 +390,8 @@ int main()
         puts("3. Highest Put Volume");
         puts("4. Lowest Put Volume");
         puts("5. Put/Call Ratio");
-        puts("6. Put/Call Ratio (Month)\n");
+        puts("6. Put/Call Ratio (Month)");
+        puts("7. Put/Call Ratio (Quarter)\n");
 
         printf("Please enter option number (-1 to quit): ");
         scanf("%d", &userChoice);
@@ -391,14 +400,14 @@ int main()
         switch (userChoice)
         {
         case 1:
-            printf("Enter first year: ");
+            printf("Enter first year (Last two digits): ");
             scanf("%d", &userYear1);
             printf("Enter first month (numerically): ");
             scanf("%d", &userMonth1);
             printf("Enter first day of month: ");
             scanf("%d", &userDay1);
 
-            printf("Enter second year: ");
+            printf("Enter second year (Last two digits): ");
             scanf("%d", &userYear2);
             printf("Enter second month (numerically): ");
             scanf("%d", &userMonth2);
@@ -409,14 +418,14 @@ int main()
                    dataBase[maxCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].cVol);
             break;
         case 2:
-            printf("Enter first year: ");
+            printf("Enter first year (Last two digits): ");
             scanf("%d", &userYear1);
             printf("Enter first month (numerically): ");
             scanf("%d", &userMonth1);
             printf("Enter first day of month: ");
             scanf("%d", &userDay1);
 
-            printf("Enter second year: ");
+            printf("Enter second year (Last two digits): ");
             scanf("%d", &userYear2);
             printf("Enter second month (numerically): ");
             scanf("%d", &userMonth2);
@@ -427,14 +436,14 @@ int main()
                    dataBase[minCall(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].cVol);
             break;
         case 3:
-            printf("Enter first year: ");
+            printf("Enter first year (Last two digits): ");
             scanf("%d", &userYear1);
             printf("Enter first month (numerically): ");
             scanf("%d", &userMonth1);
             printf("Enter first day of month: ");
             scanf("%d", &userDay1);
 
-            printf("Enter second year: ");
+            printf("Enter second year (Last two digits): ");
             scanf("%d", &userYear2);
             printf("Enter second month (numerically): ");
             scanf("%d", &userMonth2);
@@ -445,14 +454,14 @@ int main()
                    dataBase[maxPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].pVol);
             break;
         case 4:
-            printf("Enter first year: ");
+            printf("Enter first year (Last two digits): ");
             scanf("%d", &userYear1);
             printf("Enter first month (numerically): ");
             scanf("%d", &userMonth1);
             printf("Enter first day of month: ");
             scanf("%d", &userDay1);
 
-            printf("Enter second year: ");
+            printf("Enter second year (Last two digits): ");
             scanf("%d", &userYear2);
             printf("Enter second month (numerically): ");
             scanf("%d", &userMonth2);
@@ -463,14 +472,14 @@ int main()
                    dataBase[minPut(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2)].pVol);
             break;
         case 5:
-            printf("Enter first year: ");
+            printf("Enter first year (Last two digits): ");
             scanf("%d", &userYear1);
             printf("Enter first month (numerically): ");
             scanf("%d", &userMonth1);
             printf("Enter first day of month: ");
             scanf("%d", &userDay1);
 
-            printf("Enter second year: ");
+            printf("Enter second year (Last two digits): ");
             scanf("%d", &userYear2);
             printf("Enter second month (numerically): ");
             scanf("%d", &userMonth2);
@@ -485,14 +494,21 @@ int main()
             scanf("%d", &userMonth1);
             monthTabular(userMonth1);
             break;
+        case 7:
+            printf("Enter a quarter (numerically): ");
+            scanf("%d", &userQuarter);
+            quarterTabular(userQuarter);
+            break;
+        default:
+            printf("Please enter a valid user input.\n");
         }
 
 
     }
 
-    puts("\nOLD STUFF");
-    printf("%d\n", timeFrameBullBear(10, 7, 15, 10, 7, 19));
-    monthTabular(7);        // Gives the stats for a specific month out of every year available
+//    puts("\nOLD STUFF");
+//    printf("%d\n", timeFrameBullBear(10, 7, 15, 10, 7, 19));
+//    monthTabular(7);        // Gives the stats for a specific month out of every year available
 
     return 0;
 }
