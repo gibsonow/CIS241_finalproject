@@ -2,8 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 
+//authors: Owen Gibson, Seth Gibson, Jaiden Ortiz
+//Professor: Vijay Bhuse
+//date: 6/19/2022
+//title:CIS241_finalproject
+//description: this program is designed to read a file containing SPY options
+//data, and use that data to draw conclusion such as bull/bear trend of a
+//given time range
+
 #define MAXENTRIES 2500
 
+
+//Struct to partition each entry into
+//the resptive members
+//year: year of entry
+//month: month of entry
+//day: day of entry
+//pcRatio: put/call ratio of entry
+//pVol: put volume of entry
+//cVol: call volume of entry
+//totVol: total options volume of entry
 struct entry
 {
     unsigned int year;
@@ -17,6 +35,8 @@ struct entry
 struct entry dataBase[MAXENTRIES];
 int currentEntries = 0;
 
+//Formats output of each member of a particular object in dataBase[]
+//i: index of object to be displayed
 void printEntry(int i)
 {
     printf("\n");
@@ -27,6 +47,9 @@ void printEntry(int i)
     printf("Total Volume:           %d\n\n", dataBase[i].totVol);
 }
 
+//assigns each member of each object in dataBase[]
+//using format specifiers in fscanf if file 
+//can be opened succesfully
 void fscanDataBase(void)
 {
     unsigned int t_year;
@@ -74,6 +97,15 @@ void fscanDataBase(void)
     }
 }
 
+//Uses call volume (cVol) of each object in dataBase[] to find
+//index of maximum call volume in time range
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
+//return: maxCallIndex
 int maxCall(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
 {
     int i, date1 = 0, date2 = 0, maxCall = 0, maxCallIndex = 0;
@@ -91,6 +123,15 @@ int maxCall(int year1, int month1, int day1, int year2, int month2, int day2)   
     return maxCallIndex;
 }
 
+//Uses call volume (cVol) of each object in dataBase[] to find
+//index of minimum call volume in time range
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
+//return: maxCallIndex
 int minCall(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
 {
     int i, date1 = 0, date2 = 0, minCall = 1000000, minCallIndex = 0;
@@ -108,6 +149,15 @@ int minCall(int year1, int month1, int day1, int year2, int month2, int day2)   
     return minCallIndex;
 }
 
+//Uses put volume (pVol) of each object in dataBase[] to find
+//index of maximum call volume in time range
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
+//return: maxPutIndex
 int maxPut(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
 {
     int i, date1 = 0, date2 = 0, maxPut = 0, maxPutIndex = 0;
@@ -125,6 +175,15 @@ int maxPut(int year1, int month1, int day1, int year2, int month2, int day2)    
     return maxPutIndex;
 }
 
+//Uses put volume (pVol) of each object in dataBase[] to find
+//index of minimum call volume in time range
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
+//return: maxPutIndex
 int minPut(int year1, int month1, int day1, int year2, int month2, int day2)           //assumes cleaned data, date1 comes before date2
 {
     int i, date1 = 0, date2 = 0, minPut = 1000000, minPutIndex = 0;
@@ -142,9 +201,11 @@ int minPut(int year1, int month1, int day1, int year2, int month2, int day2)    
     return minPutIndex;
 }
 
-/*
-* Helper function that returns database index (int) based on given day, month, and year
-*/
+//Helper function that returns index of particular date in dataBase[]
+//year: year of date to be indexed
+//month: month of date to be indexed
+//day: day of date to be indexed
+//return: date
 int dateIndex(int year, int month, int day)
 {
     int i, date = -1;
@@ -158,6 +219,16 @@ int dateIndex(int year, int month, int day)
     return date;
 }
 
+//Calculates average put/call ratio over time range
+//given put/call ratio of each object in given time range
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
+//return: 1 if bullish
+//return: 2 0 iif bearish
 int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, int day2)
 {
     int i, date1, date2;
@@ -176,6 +247,13 @@ int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, in
     else return 0;                                  //0 if bear
 }
 
+//Calculates average put/call ratio over time range
+//given put/call ratio of each object in given time range
+//year1: year of first date
+//date1: index of first date
+//date2: index of second date
+//return: 1 if bullish
+//return: 2 0 iif bearish
 int timeFrameBullBearIndex(int date1, int date2)
 {
     int i;
@@ -194,6 +272,10 @@ int timeFrameBullBearIndex(int date1, int date2)
     else return 0;                                   //0 if bear
 }
 
+//finds first and last instance of given month and calls
+//timeFrameBullBearIndex to calculate whether trend was bearish
+//or bullish across the entered month
+//month: integer representing particular month of year
 void monthTabular(int month)
 {
     int startMonthIndex = 0, endMonthIndex = 0, index = 0, result = 0;
@@ -221,9 +303,14 @@ void monthTabular(int month)
     }
 }
 
+//finds first (monthMin) and last instance (monthMax) of given quarter and calls
+//timeFrameBullBearIndex to calculate whether trend was bearish
+//or bullish across the entered quarter
+//quarter: integer representing particular quarter of year
 void quarterTabular(int quarter){
-    int monthMin, monthMid, monthMax;
-    switch(quarter){
+    //represent first, second, and third months of given quarter
+    int monthMin, monthMid, monthMax; 
+    switch(quarter){ //assigns each variable to particular month index based on quarter
         case(1):
             monthMin = 1;
             monthMid = 2;
@@ -272,6 +359,7 @@ void quarterTabular(int quarter){
     }
 }
 
+//Driver for functions based on menu option selection
 int main()
 {
     int userChoice = 0;
