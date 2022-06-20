@@ -189,19 +189,27 @@ void timeFrameBullBearIndexQuarterly(int date1, int date2) {        // Only take
     while (dateCursor != date2) {
         quarter = quarterCheck(dateCursor);
         if (quarter != quarterFlag) {
-            quarterFlag = quarter;
-            printf("Q%d %d: ", quarter, dataBase[dateCursor - 1].year);
-            timeFrameBullBearIndex(date1, dateCursor - 1);
-            printf("\n");
+            printf("Q%d 20%d: ", quarterFlag, dataBase[dateCursor - 1].year);
+            printf("%d\n", timeFrameBullBearIndex(date1, dateCursor - 1));
+            //printf("\n");
             date1 = dateCursor;
+            quarterFlag = quarter;
         }
 
         dateCursor++;
     }
 
     printf("Q%d 20%d: ", quarter, dataBase[dateCursor].year);
-    timeFrameBullBearIndex(date1, dateCursor);
+    printf("%d\n", timeFrameBullBearIndex(date1, dateCursor));
     printf("\n");
+}
+
+void timeFrameBullBearQuarterly(int year1, int month1, int day1, int year2, int month2, int day2) {
+    int date1, date2;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    timeFrameBullBearIndexQuarterly(date1, date2);
 }
 
 void monthTabular(int month) {
@@ -286,7 +294,8 @@ int main()
     //monthTabular(10);        // Gives the stats for a specific month out of every year available
     //printf("\n");
     //quarterTabular(4);
-    timeFrameBullBearIndexQuarterly(5, 303);
+    //timeFrameBullBearIndexQuarterly(5, 303);
+    timeFrameBullBearQuarterly(10, 7, 15, 12, 7, 19);
 
     return 0;
 }
