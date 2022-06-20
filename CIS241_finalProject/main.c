@@ -238,6 +238,11 @@ int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, in
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
+    if(date1 == -1 || date2 == -1){
+        printf("Please enter valid date.\n");
+        return -1;
+    }
+
     for (i = date1; i <= date2; i++)
     {
         pcRatioSum += dataBase[i].pcRatio;
@@ -260,6 +265,10 @@ int timeFrameBullBearIndex(int date1, int date2)
 {
     int i;
     double pcRatioSum = 0, pcRatioAvg;
+
+    if((date1 > currentEntries) || (date1 < 0) || (date2 > currentEntries) || (date2 < 0)){
+        return -1;
+    }
 
     for (i = date1; i <= date2; i++)
     {
