@@ -283,6 +283,52 @@ int timeFrameBullBearIndex(int date1, int date2)
     else return 0;                                   //0 if bear
 }
 
+ int quarterCheck(int dateCursor) {
+    int quarter = 0;
+
+    if (dataBase[dateCursor].month >= 1 && dataBase[dateCursor].month <= 3)
+        quarter = 1;
+    else if (dataBase[dateCursor].month >= 4 && dataBase[dateCursor].month <= 6)
+        quarter = 2;
+    else if (dataBase[dateCursor].month >= 7 && dataBase[dateCursor].month <= 9)
+        quarter = 3;
+    else if (dataBase[dateCursor].month >= 10 && dataBase[dateCursor].month <= 12)
+        quarter = 4;
+
+    return quarter;
+}
+
+void timeFrameBullBearIndexQuarterly(int date1, int date2) {        // Only takes in index numbers, maybe make wrapper class to take in dates?
+    int dateCursor = date1;
+    int monthFlag = dataBase[date1].month;
+    int quarter, quarterFlag = quarterCheck(dateCursor);
+
+    while (dateCursor != date2) {
+        quarter = quarterCheck(dateCursor);
+        if (quarter != quarterFlag) {
+            printf("Q%d 20%d: ", quarterFlag, dataBase[dateCursor - 1].year);
+            printf("%s\n", timeFrameBullBearIndex(date1, dateCursor - 1) ? "Bull" : "Bear");
+            //printf("\n");
+            date1 = dateCursor;
+            quarterFlag = quarter;
+        }
+
+        dateCursor++;
+    }
+
+    printf("Q%d 20%d: ", quarter, dataBase[dateCursor].year);
+    printf("%s\n", timeFrameBullBearIndex(date1, dateCursor - 1) ? "Bull" : "Bear");
+    printf("\n");
+}
+
+void timeFrameBullBearQuarterly(int year1, int month1, int day1, int year2, int month2, int day2) {
+    int date1, date2;
+    date1 = dateIndex(year1, month1, day1);
+    date2 = dateIndex(year2, month2, day2);
+
+    timeFrameBullBearIndexQuarterly(date1, date2);
+}
+
 //finds first and last instance of given month and calls
 //timeFrameBullBearIndex to calculate whether trend was bearish
 //or bullish across the entered month
@@ -399,8 +445,9 @@ int main()
         puts("3. Highest Put Volume");
         puts("4. Lowest Put Volume");
         puts("5. Put/Call Ratio");
-        puts("6. Put/Call Ratio (Month)");
-        puts("7. Put/Call Ratio (Quarter)\n");
+        puts("6. Put/Call Ratio (Quarter)");
+        puts("7. Put/Call Ratio Tabular (Month)");
+        puts("8. Put/Call Ratio Tabular (Quarter)");
 
         printf("Please enter option number (-1 to quit): ");
         scanf("%d", &userChoice);
@@ -499,11 +546,27 @@ int main()
             puts("This suggests a Bearish sentiment");
             break;
         case 6:
+            printf("Enter first year (Last two digits): ");
+            scanf("%d", &userYear1);
+            printf("Enter first month (numerically): ");
+            scanf("%d", &userMonth1);
+            printf("Enter first day of month: ");
+            scanf("%d", &userDay1);
+
+            printf("Enter second year (Last two digits): ");
+            scanf("%d", &userYear2);
+            printf("Enter second month (numerically): ");
+            scanf("%d", &userMonth2);
+            printf("Enter second day of month: ");
+            scanf("%d", &userDay2);
+
+            timeFrameBullBearQuarterly(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2);
+        case 7:
             printf("Enter a month (numerically): ");
             scanf("%d", &userMonth1);
             monthTabular(userMonth1);
             break;
-        case 7:
+        case 8:
             printf("Enter a quarter (numerically): ");
             scanf("%d", &userQuarter);
             quarterTabular(userQuarter);
