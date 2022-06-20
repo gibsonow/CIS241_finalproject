@@ -114,6 +114,12 @@ int maxCall(int year1, int month1, int day1, int year2, int month2, int day2)   
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
+    if(date1 == -1 || date2 == -1){
+        if(date1 == -1) printf("The First entered date falls out of bounds.\n");
+        if(date2 == -1) printf("The Second entered date falls out of bounds.\n");
+        return;
+    }
+
     for (i = date1; i <= date2; i++)
     {
         if (dataBase[i].cVol > maxCall)
@@ -139,6 +145,12 @@ int minCall(int year1, int month1, int day1, int year2, int month2, int day2)   
     int i, date1 = 0, date2 = 0, minCall = 1000000, minCallIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
+
+    if(date1 == -1 || date2 == -1){
+        if(date1 == -1) printf("The First entered date falls out of bounds.\n");
+        if(date2 == -1) printf("The Second entered date falls out of bounds.\n");
+        return;
+    }
 
     for (i = date1; i <= date2; i++)
     {
@@ -166,6 +178,12 @@ int maxPut(int year1, int month1, int day1, int year2, int month2, int day2)    
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
 
+    if(date1 == -1 || date2 == -1){
+        if(date1 == -1) printf("The First entered date falls out of bounds.\n");
+        if(date2 == -1) printf("The Second entered date falls out of bounds.\n");
+        return;
+    }
+
     for (i = date1; i <= date2; i++)
     {
         if (dataBase[i].pVol > maxPut)
@@ -191,6 +209,12 @@ int minPut(int year1, int month1, int day1, int year2, int month2, int day2)    
     int i, date1 = 0, date2 = 0, minPut = 1000000, minPutIndex = 0;
     date1 = dateIndex(year1, month1, day1);
     date2 = dateIndex(year2, month2, day2);
+
+    if(date1 == -1 || date2 == -1){
+        if(date1 == -1) printf("The First entered date falls out of bounds.\n");
+        if(date2 == -1) printf("The Second entered date falls out of bounds.\n");
+        return;
+    }
 
     for (i = date1; i <= date2; i++)
     {
@@ -223,6 +247,7 @@ int dateIndex(int year, int month, int day)
 
 //Calculates average put/call ratio over time range
 //given put/call ratio of each object in given time range
+//Uses this to calculate bull/bear sentiment
 //year1: year of first date
 //month1: month of first date
 //day1: day of first date
@@ -256,7 +281,7 @@ int timeFrameBullBear(int year1, int month1, int day1, int year2, int month2, in
 
 //Calculates average put/call ratio over time range
 //given put/call ratio of each object in given time range
-//year1: year of first date
+//Uses this to calculate bull/bear sentiment
 //date1: index of first date
 //date2: index of second date
 //return: 1 if bullish
@@ -298,6 +323,11 @@ int timeFrameBullBearIndex(int date1, int date2)
     return quarter;
 }
 
+//Calculates average put/call ratio over time range
+//given put/call ratio of each object in given time range
+//Uses this to calculate bull/bear sentiment for each quarter
+//date1: index of first date
+//date2: index of second date
 void timeFrameBullBearIndexQuarterly(int date1, int date2) {        // Only takes in index numbers, maybe make wrapper class to take in dates?
     int dateCursor = date1;
     int monthFlag = dataBase[date1].month;
@@ -327,6 +357,15 @@ void timeFrameBullBearIndexQuarterly(int date1, int date2) {        // Only take
     printf("\n");
 }
 
+//Calculates average put/call ratio over time range
+//given put/call ratio of each object in given time range
+//Uses this to calculate bull/bear sentiment for each quarter
+//year1: year of first date
+//month1: month of first date
+//day1: day of first date
+//year2: year of second date
+//month2: month of second date
+//day2: day of second date
 void timeFrameBullBearQuarterly(int year1, int month1, int day1, int year2, int month2, int day2) {
     int date1, date2;
     date1 = dateIndex(year1, month1, day1);
