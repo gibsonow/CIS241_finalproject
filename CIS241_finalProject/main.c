@@ -41,7 +41,7 @@ void printEntry(int i)
 {
     printf("\n");
     printf("Date (m-d-y):           %d-%d-%d\n", dataBase[i].year, dataBase[i].month, dataBase[i].day);
-    printf("Put/Call Ratio:         %lf\n", dataBase[i].pcRatio);
+    printf("Put/Call Ratio:         %.2lf\n", dataBase[i].pcRatio);
     printf("Put Volume:             %d\n", dataBase[i].pVol);
     printf("Call Volume:            %d\n", dataBase[i].cVol);
     printf("Total Volume:           %d\n\n", dataBase[i].totVol);
@@ -303,6 +303,12 @@ void timeFrameBullBearIndexQuarterly(int date1, int date2) {        // Only take
     int monthFlag = dataBase[date1].month;
     int quarter, quarterFlag = quarterCheck(dateCursor);
 
+    if(date1 == -1 || date2 == -1){
+        if(date1 == -1) printf("The First entered date falls out of bounds.\n");
+        if(date2 == -1) printf("The Second entered date falls out of bounds.\n");
+        return;
+    }
+
     while (dateCursor != date2) {
         quarter = quarterCheck(dateCursor);
         if (quarter != quarterFlag) {
@@ -445,9 +451,10 @@ int main()
         puts("3. Highest Put Volume");
         puts("4. Lowest Put Volume");
         puts("5. Put/Call Ratio");
-        puts("6. Put/Call Ratio (Quarter)");
-        puts("7. Put/Call Ratio Tabular (Month)");
-        puts("8. Put/Call Ratio Tabular (Quarter)");
+        puts("6. Put/Call Ratio (Quarterly)");
+        puts("7. Put/Call Ratio Tabular (Monthly)");
+        puts("8. Put/Call Ratio Tabular (Quarterly)");
+        puts("9. Print entire database");
 
         printf("Please enter option number (-1 to quit): ");
         scanf("%d", &userChoice);
@@ -561,6 +568,7 @@ int main()
             scanf("%d", &userDay2);
 
             timeFrameBullBearQuarterly(userYear1, userMonth1, userDay1, userYear2, userMonth2, userDay2);
+            break;
         case 7:
             printf("Enter a month (numerically): ");
             scanf("%d", &userMonth1);
@@ -571,8 +579,14 @@ int main()
             scanf("%d", &userQuarter);
             quarterTabular(userQuarter);
             break;
+        case 9:
+            for(int i = 0; i < currentEntries - 1; i++){
+                printEntry(i);
+            }
+            break;
         default:
             printf("Please enter a valid user input.\n");
+            break;
         }
 
 
